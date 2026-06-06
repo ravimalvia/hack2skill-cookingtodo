@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cooking To-Do AI Planner</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-label="Cooking planner overview">
+        <div class="hero-copy">
+          <p class="eyebrow">Personal cooking to-do generator</p>
+          <h1>Plan today&apos;s meals from your schedule, pantry, and budget.</h1>
+          <p>
+            Build flexible meal plans for any cuisine or food type with
+            groceries, substitutions, prep tasks, and budget feasibility.
+          </p>
+        </div>
+        <img
+          src="assets/meal-prep-hero.png"
+          alt="Overhead meal preparation ingredients arranged beside a checklist"
+        />
+      </section>
+
+      <section class="workspace" aria-label="Meal planning workspace">
+        <form class="planner-panel" id="plannerForm">
+          <div class="panel-heading">
+            <p class="eyebrow">Day profile</p>
+            <h2>Inputs</h2>
+          </div>
+
+          <label>
+            <span>Day type</span>
+            <select id="dayType" name="dayType">
+              <option value="busy">Busy workday</option>
+              <option value="balanced">Balanced day</option>
+              <option value="active">Active / workout day</option>
+              <option value="slow">Slow day at home</option>
+              <option value="travel">Travel day</option>
+              <option value="family">Family cooking day</option>
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Meals to plan</legend>
+            <div class="check-grid">
+              <label><input type="checkbox" name="meals" value="Breakfast" checked /> Breakfast</label>
+              <label><input type="checkbox" name="meals" value="Lunch" checked /> Lunch</label>
+              <label><input type="checkbox" name="meals" value="Dinner" checked /> Dinner</label>
+              <label><input type="checkbox" name="meals" value="Snack" /> Snack</label>
+            </div>
+          </fieldset>
+
+          <label>
+            <span>Servings</span>
+            <input id="servings" name="servings" type="number" min="1" max="12" value="1" />
+          </label>
+
+          <label>
+            <span>Cooking energy</span>
+            <input id="energy" name="energy" type="range" min="1" max="5" value="3" />
+            <output id="energyValue" for="energy">Steady</output>
+          </label>
+
+          <label>
+            <span>Diet preference</span>
+            <select id="diet" name="diet">
+              <option value="flex">Flexible</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="highProtein">High protein</option>
+              <option value="keto">Keto / low carb</option>
+              <option value="glutenFree">Gluten free</option>
+              <option value="diabeticFriendly">Diabetic friendly</option>
+              <option value="custom">Custom in notes</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Max cooking time per meal</span>
+            <select id="cookingTime" name="cookingTime">
+              <option value="10">10 minutes</option>
+              <option value="20">20 minutes</option>
+              <option value="30" selected>30 minutes</option>
+              <option value="45">45 minutes</option>
+              <option value="60">60 minutes</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Cuisine or region</span>
+            <input id="cuisine" name="cuisine" type="text" placeholder="Indian, Italian, Korean, Mediterranean" />
+          </label>
+
+          <label>
+            <span>Preferred food type</span>
+            <input id="foodType" name="foodType" type="text" placeholder="home-style, street food, high protein, comfort food" />
+          </label>
+
+          <label>
+            <span>Primary goal</span>
+            <select id="healthGoal" name="healthGoal">
+              <option value="balanced">Balanced nutrition</option>
+              <option value="weightLoss">Weight management</option>
+              <option value="muscleGain">Muscle gain</option>
+              <option value="lowCost">Lowest practical cost</option>
+              <option value="quickPrep">Fastest prep</option>
+              <option value="familyFriendly">Family friendly</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Budget for today</span>
+            <div class="money-input">
+              <select id="currency" name="currency" aria-label="Currency">
+                <option value="$">$</option>
+                <option value="₹">₹</option>
+                <option value="€">€</option>
+                <option value="£">£</option>
+              </select>
+              <input id="budget" name="budget" type="number" min="5" max="80" value="24" />
+            </div>
+          </label>
+
+          <label>
+            <span>Pantry items already available</span>
+            <textarea
+              id="pantry"
+              name="pantry"
+              rows="4"
+              placeholder="rice, oats, eggs, spinach, lentils"
+            ></textarea>
+          </label>
+
+          <label>
+            <span>Ingredients to avoid</span>
+            <input id="avoid" name="avoid" type="text" placeholder="allergies, disliked foods, religious restrictions" />
+          </label>
+
+          <label>
+            <span>Equipment available</span>
+            <input id="equipment" name="equipment" type="text" placeholder="stove, microwave, air fryer, oven, blender" />
+          </label>
+
+          <label>
+            <span>Custom requirements</span>
+            <textarea
+              id="notes"
+              name="notes"
+              rows="4"
+              placeholder="Example: no onion or garlic, kid-friendly dinner, use paneer if possible"
+            ></textarea>
+          </label>
+
+          <button id="generateButton" type="submit">Generate cooking to-do list</button>
+        </form>
+
+        <section class="results-panel" aria-live="polite">
+          <div class="result-toolbar">
+            <div>
+              <p class="eyebrow">Generated plan</p>
+              <h2 id="planTitle">Busy workday plan</h2>
+            </div>
+            <span class="ai-badge" id="aiBadge">AI generated</span>
+            <button class="secondary-button" id="copyPlan" type="button">Copy list</button>
+          </div>
+
+          <div class="budget-card" id="budgetCard">
+            <div>
+              <span class="status-dot"></span>
+              <strong id="budgetStatus">Feasible</strong>
+            </div>
+            <p id="budgetDetails">$0 estimated against a $24 budget.</p>
+          </div>
+
+          <div class="meal-grid" id="mealGrid"></div>
+
+          <div class="output-grid">
+            <article>
+              <h3>Grocery list</h3>
+              <ul id="groceryList"></ul>
+            </article>
+
+            <article>
+              <h3>Substitutions</h3>
+              <ul id="substitutionList"></ul>
+            </article>
+
+            <article>
+              <h3>Cooking to-dos</h3>
+              <ol id="todoList"></ol>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
